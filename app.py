@@ -30,4 +30,6 @@ def render_not_found(error):
 def render_server_error(error):
     return "Sorry, error 500. Something gone wrong, PLEASE RELOAD THIS PAGE."
 
-app.run()
+# Launch server
+if __name__ == '__main__':
+    app.run()
