@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<main class="container mt-3 text-center">
+
+    {% if error == 404 %}
+    <h1 class="text-center">404 ERROR</h1>
+    <div class="alert alert-info text-center" role="alert">
+        Please, return to the "Home Page" or choose a clothes type in menu above, again.
+    </div>
+    <a class="btn btn-outline-secondary" href="/" role="button">Take me to the "Home Page"</a>
+    {% else %}
+    <h1 class="text-center">500 ERROR</h1>
+    <div class="alert alert-info text-center" role="alert">
+        Please, return to the "Home Page" or choose a clothes type in menu above, again.
+    </div>
+    <a class="btn btn-outline-secondary" href="/" role="button">Take me to the "Home Page"</a>
+    {% endif %}
+
+
+</main>
+
+{% endblock %}̊

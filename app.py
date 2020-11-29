@@ -24,11 +24,17 @@ def render_page(unit_type):
 #Render simple ERROR page
 @app.errorhandler(404)
 def render_not_found(error):
-    return "Sorry, error 404."
+    return render_template('error.html',
+                           title=title,
+                           unit_type=unit_type,
+                           error=error)
 
 @app.errorhandler(500)
 def render_server_error(error):
-    return "Sorry, error 500. Something gone wrong, PLEASE RELOAD THIS PAGE."
+    return render_template('error.html',
+                           title=title,
+                           unitlist=unitList,
+                           error=error)
 
 # Launch server
 if __name__ == '__main__':

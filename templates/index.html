@@ -2,7 +2,7 @@
 
 {% block main %}
   <main class="container mt-3">
-    <p class="text-center">YAROSLAV KORENSKOY - JUNIOR DEV TEST ASSIGNMENT - REAKTOR GROUP OY</p>
+    <p class="text-center font-weight-bold">YAROSLAV KORENSKOY - JUNIOR DEV TEST ASSIGNMENT - REAKTOR GROUP OY</p>
 
 
     {% if unit_type %}
@@ -38,14 +38,17 @@
 
 
     {% else %}
-      <div class="alert alert-primary text-center" role="alert">
-        Please, choose a clothes type by the link above in the menu.
+      <div class="alert alert-info text-center" role="alert">
+        Please, choose a clothes type by clicking on a button below (or above in the menu).
+      </div>
+      <div class="container text-center">
+      <p class="text-center">After that, please wait for a few seconds until the table and table-menu will be loaded.</p>
+      <a class="btn btn-outline-secondary" href="/jackets" role="button">JACKETS</a>
+      <a class="btn btn-outline-secondary" href="/shirts" role="button">SHIRTS</a>
+      <a class="btn btn-outline-secondary" href="/accessories" role="button">ACCESSORIES</a>
       </div>
 
-
     {% endif %}
-
-
 
 
 
