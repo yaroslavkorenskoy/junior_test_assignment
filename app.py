@@ -1,42 +1,33 @@
 from flask import Flask, render_template
 
-from data import title, subtitle, description, unitList, unit_table, database
+from data import title, unitList, unit_table
 
 app = Flask(__name__)
 
-#Render main
+#Render main page
 @app.route("/")
 def template():
     return render_template('index.html',
                            title=title,
-                           subtitle=subtitle,
-                           description=description,
-                           unitlist=unitList,
-                           database=database)
+                           unitlist=unitList)
 
-#Render page
+#Render clothes type page
 @app.route("/<unit_type>/")
 def render_page(unit_type):
     drawData = unit_table(unit_type)
     return render_template('index.html',
                            title=title,
                            unit_type=unit_type,
-                           subtitle=subtitle,
-                           description=description,
                            unitlist=unitList,
-                           database=database,
                            drawData=drawData)
 
-#Render ERROR
+#Render simple ERROR page
 @app.errorhandler(404)
 def render_not_found(error):
-    return "Увы, ошибка 404. Ничего не нашлось! Вот неудача, отправляйтесь на главную!"
+    return "Sorry, error 404."
 
 @app.errorhandler(500)
 def render_server_error(error):
-    return "Жаль, ошибка 500. Что-то не так, но мы все починим"
+    return "Sorry, error 500. Something gone wrong, PLEASE RELOAD THIS PAGE."
 
-#Launch server
-# if __name__ == '__main__':
-#     app.run()
 app.run()

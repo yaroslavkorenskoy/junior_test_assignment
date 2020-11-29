@@ -2,18 +2,19 @@ import requests
 import re
 
 title = "Clothing Brand"
-subtitle = "Assignment brief for junior developers"
-description = "Reaktor test"
 unitList = ['jackets', 'shirts', 'accessories']
 url = 'https://bad-api-assignment.reaktor.com'
 urlUnitList = ['/products/', '/availability/']
 
+# Database initialisation will be with ORM and SQLite in v2.0
 database = {}
 manufBase = []
 
+# Singleton class should be good practice here, as database in v2.0
 def unit_table(unit_type):
     database.clear()
     manufBase.clear()
+    # first GET API request
     getData = requests.get(url + urlUnitList[0] + unit_type).json()
     for i in range(0, len(getData)):
         if getData[i]['manufacturer'] not in manufBase:
@@ -34,11 +35,10 @@ def unit_table(unit_type):
                                                'price': getData[i]['price'],
                                                })
 
-    # делаем проходку по списку производителей, чтоб получить json авайлобилити
+    # Second GET API request to check availability and add it to first json db
     for key in manufBase:
         getAvailability = requests.get(url + urlUnitList[1] + key).json()
         for i in range(0, len(getAvailability['response'])):
-            # for i in range(0, 35):
             availabilityValue = re.findall(r'\>(.*?)\</', getAvailability['response'][i]['DATAPAYLOAD'])
             aidi = getAvailability['response'][i]['id'].lower()
             if aidi in database:
