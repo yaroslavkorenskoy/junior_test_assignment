@@ -1,14 +1,17 @@
-import requests
 import re
+from collections import defaultdict
+
+import requests
 
 title = "Clothing Brand"
-unitList = ['jackets', 'shirts', 'accessories']
+unitList = ('jackets', 'shirts', 'accessories')
 url = 'https://bad-api-assignment.reaktor.com'
-urlUnitList = ['/products/', '/availability/']
+urlUnitList = ('/products/', '/availability/')
 
-# Database initialisation will be with ORM and SQLite in v2.0
-database = {}
-manufBase = []
+# Database initialisation
+database = defaultdict(dict)
+manufBase = set()
+
 
 # Singleton class should be good practice here, as database in v2.0
 def unit_table(unit_type):
@@ -16,33 +19,22 @@ def unit_table(unit_type):
     manufBase.clear()
     # first GET API request
     getData = requests.get(url + urlUnitList[0] + unit_type).json()
-    for i in range(0, len(getData)):
-        if getData[i]['manufacturer'] not in manufBase:
-            manufBase.append(getData[i]['manufacturer'])
-        else:
-            pass
+    for element in getData:
+        manufBase.add(element['manufacturer'])
 
-        if getData[i]['id'] not in database:
-            database[getData[i]['id']] = {'manufacturer': getData[i]['manufacturer'],
-                                          'name': getData[i]['name'],
-                                          'color': getData[i]['color'],
-                                          'price': getData[i]['price'],
-                                          }
-        else:
-            database[getData[i]['id']].update({'manufacturer': getData[i]['manufacturer'],
-                                               'name': getData[i]['name'],
-                                               'color': getData[i]['color'],
-                                               'price': getData[i]['price'],
-                                               })
+        database[element['id']].update({'manufacturer': element['manufacturer'],
+                                        'name': element['name'],
+                                        'color': element['color'],
+                                        'price': element['price']})
 
-    # Second GET API request to check availability and add it to first json db
-    for key in manufBase:
-        getAvailability = requests.get(url + urlUnitList[1] + key).json()
-        for i in range(0, len(getAvailability['response'])):
-            availabilityValue = re.findall(r'\>(.*?)\</', getAvailability['response'][i]['DATAPAYLOAD'])
-            aidi = getAvailability['response'][i]['id'].lower()
-            if aidi in database:
-                database[aidi].update(availability=availabilityValue[0])
-            else:
-                pass
+    # Second GET API request to check availability and add it to the first json db
+    for manuf in manufBase:
+        getAvailability = requests.get(url + urlUnitList[1] + manuf).json()
+        response = getAvailability['response']
+
+        for cur_elem in response:
+            availabilityValue = re.findall(r'\>(.*?)\</', cur_elem['DATAPAYLOAD'])
+            element = database.get(cur_elem['id'].lower())
+            if element is not None:
+                element.update(availability=availabilityValue[0])
     return database
